@@ -1,43 +1,13 @@
-// Mobile menu: open, close on link click, close on Escape
+// Bootstrap handles the menu toggle and the active link (scrollspy).
+// Here: close the mobile menu after a link is tapped.
 function initNav() {
-  const toggle = document.querySelector('.nav-toggle');
-  const nav = document.getElementById('nav');
-  if (!toggle || !nav) return;
+  const menu = document.getElementById('nav');
+  if (!menu) return;
 
-  const setOpen = (open) => {
-    nav.classList.toggle('is-open', open);
-    toggle.setAttribute('aria-expanded', String(open));
-  };
-
-  toggle.addEventListener('click', () => {
-    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-  });
-  nav.addEventListener('click', (e) => {
-    if (e.target.closest('a')) setOpen(false);
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') setOpen(false);
-  });
-}
-
-// Highlight the menu link for the section on screen
-function initScrollSpy() {
-  if (!('IntersectionObserver' in window)) return;
-  const links = [...document.querySelectorAll('.main-nav a')];
-
-  const spy = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      links.forEach((a) => {
-        if (a.hash === '#' + entry.target.id) a.setAttribute('aria-current', 'true');
-        else a.removeAttribute('aria-current');
-      });
-    });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-
-  links.forEach((a) => {
-    const section = document.querySelector(a.hash);
-    if (section) spy.observe(section);
+  menu.addEventListener('click', (e) => {
+    if (e.target.closest('.nav-link') && menu.classList.contains('show')) {
+      bootstrap.Collapse.getOrCreateInstance(menu).hide();
+    }
   });
 }
 
@@ -63,5 +33,4 @@ function initReveal() {
 }
 
 initNav();
-initScrollSpy();
 initReveal();
